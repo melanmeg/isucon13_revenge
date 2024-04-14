@@ -1,0 +1,22 @@
+name: "Pprof"
+on:
+  workflow_dispatch:
+jobs:
+  Pprof:
+    name: "Pprof Job"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Exe
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ vars.PPROF }}
+          username: isucon
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            sleep 7
+            sudo curl -o cpu.pprof http://localhost:6060/debug/pprof/profile?seconds=60

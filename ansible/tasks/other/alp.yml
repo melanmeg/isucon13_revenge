@@ -1,0 +1,24 @@
+- name: Download
+  get_url:
+    url: https://github.com/tkuchiki/alp/releases/download/v1.0.12/alp_linux_amd64.tar.gz
+    dest: ~/
+
+- name: Unarchive
+  unarchive:
+    src: ~/alp_linux_amd64.tar.gz
+    dest: ~/
+    remote_src: yes
+  ignore_errors: yes
+
+- name: install
+  shell: sudo install ~/alp /usr/local/bin
+
+- name: remove file
+  file:
+    path: ~/alp
+    state: absent
+
+- name: remove file
+  file:
+    path: ~/alp_linux_amd64.tar.gz
+    state: absent

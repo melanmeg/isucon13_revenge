@@ -1,0 +1,22 @@
+name: "Mysql"
+on:
+  workflow_dispatch:
+jobs:
+  Mysql:
+    name: "Mysql Job"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Exe pt-query-digest
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ vars.MYSQL }}
+          username: isucon
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            sudo sed -i '/^INSERT INTO `posts`/d' /var/log/mysql/mysql-slow.sql
+            sudo pt-query-digest /var/log/mysql/mysql-slow.sql

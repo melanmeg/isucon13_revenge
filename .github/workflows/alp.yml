@@ -1,0 +1,23 @@
+name: "Alp"
+on:
+  workflow_dispatch:
+jobs:
+  Alp:
+    name: "Alp Job"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Exe alp
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ vars.ALP }}
+          username: isucon
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            sudo cat /var/log/nginx/access.log \
+            | alp ltsv -m '/image/[0-9]+,/posts/[0-9]+,/@\w' \
+            --sort avg -r -o count,1xx,2xx,3xx,4xx,5xx,min,max,avg,sum,p99,method,uri

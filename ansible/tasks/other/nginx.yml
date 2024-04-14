@@ -1,0 +1,30 @@
+- name: Copy
+  copy:
+    src: ../../files/nginx/sites-available/isucon.conf
+    dest: /etc/nginx/sites-available/isucon.conf
+    mode: "0644"
+    backup: true
+
+- name: Copy
+  copy:
+    src: ../../files/nginx/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    mode: "0644"
+    backup: true
+
+#- name: Copy
+#  copy:
+#    src: ../../files/nginx/conf.d/var.conf
+#    dest: /etc/nginx/conf.d/var.conf
+#    mode: '0644'
+#    backup: true
+
+- name: remove file
+  file:
+    path: /var/log/nginx/access.log
+    state: absent
+
+- name: reloaded
+  systemd:
+    name: nginx
+    state: reloaded

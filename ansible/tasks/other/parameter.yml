@@ -1,0 +1,49 @@
+- name: set limits.conf
+  lineinfile:
+    dest: /etc/security/limits.conf
+    insertafter: EOF
+    line: "{{ item }}"
+  with_items:
+    - "root soft nofile 65536"
+    - "root hard nofile 65536"
+    - "* soft nofile 65536"
+    - "* hard nofile 65536"
+
+- name: set sysctl.conf
+  lineinfile:
+    dest: /etc/sysctl.conf
+    insertafter: EOF
+    line: "{{ item }}"
+  with_items:
+    - "net.core.somaxconn = 10000"
+    - "net.core.netdev_max_backlog = 8192"
+    - "net.core.rmem_max = 16777216"
+    - "net.core.wmem_max = 16777216"
+    - "net.ipv4.tcp_wmem = 4096 12582912 16777216"
+    - "net.ipv4.tcp_rmem = 4096 12582912 16777216"
+    - "net.ipv4.tcp_max_syn_backlog = 8096"
+    - "net.ipv4.tcp_slow_start_after_idle = 0"
+    - "net.ipv4.tcp_tw_reuse = 1"
+    - "net.ipv4.ip_local_port_range = 10240 65535"
+    - "net.ipv4.ip_local_reserved_ports = 24224"
+    - "net.ipv4.tcp_fin_timeout = 10"
+    - "net.ipv4.tcp_max_tw_buckets = 2000000"
+
+- name: create file
+  file:
+    path: /etc/sysctl.d/10-link-restrictions.conf
+    state: touch
+
+- name: set 10-link-restrictions.conf
+  lineinfile:
+    dest: /etc/sysctl.d/10-link-restrictions.conf
+    insertafter: EOF
+    line: "{{ item }}"
+  with_items:
+    - "fs.protected_hardlinks = 1"
+    - "fs.protected_symlinks = 1"
+  ignore_errors: yes
+
+- name: Reboot the machine (Wait for 5 min)
+  reboot:
+    reboot_timeout: 300

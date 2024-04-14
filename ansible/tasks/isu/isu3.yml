@@ -1,0 +1,89 @@
+- name: isu-ruby is disabled
+  systemd:
+    name: isu-ruby
+    state: stopped
+    enabled: false
+
+- name: isu-go is running
+  systemd:
+    name: isu-go
+    state: started
+    enabled: true
+
+- name: Git checkout
+  git:
+    repo: "https://github.com/{{ git_user }}/{{ git_repo }}.git"
+    dest: "{{ home_dir }}/{{ git_repo }}"
+
+- name: Copy
+  copy:
+    src: "{{ home_dir }}/{{ isu_dir_name }}/webapp"
+    dest: "{{ home_dir }}/{{ isu_dir_name }}/.bk"
+    remote_src: yes
+  ignore_errors: yes
+
+- name: remove
+  file:
+    path: "{{ home_dir }}/{{ isu_dir_name }}/webapp"
+    state: absent
+
+- name: Copy
+  copy:
+    src: "{{ home_dir }}/{{ git_repo }}/webapp"
+    dest: "{{ home_dir }}/{{ isu_dir_name }}/"
+    owner: isucon
+    group: isucon
+    remote_src: yes
+  ignore_errors: yes
+
+- name: remove
+  file:
+    path: "{{ home_dir }}/{{ git_repo }}"
+    state: absent
+
+### Execute as login shell
+- name: setup
+  shell: sudo -u isucon bash -lc "sh setup.sh"
+  args:
+    chdir: "{{ home_dir }}/{{ isu_dir_name }}/webapp/golang/"
+
+- name: isu-go is restarted
+  systemd:
+    name: isu-go
+    state: restarted
+
+- name: remove
+  file:
+    path: /var/log/nginx/access.log
+    state: absent
+
+- name: nginx is restarted
+  systemd:
+    name: nginx
+    state: restarted
+
+- name: remove
+  file:
+    path: /var/log/mysql/mysql-slow.sql
+    state: absent
+
+#- name: chmod
+#  file:
+#    path: "{{ home_dir }}/{{ isu_dir_name }}/webapp/sql/init.sh"
+#    mode: '0755'
+#  ignore_errors: yes
+
+#- name: shell
+#  shell: "sh {{ home_dir }}/{{ isu_dir_name }}/webapp/sql/init.sh"
+#  ignore_errors: yes
+
+- name: mysql is restarted
+  systemd:
+    name: mysql
+    state: restarted
+
+- name: redis is restarted
+  systemd:
+    name: redis-server
+    state: restarted
+  ignore_errors: yes

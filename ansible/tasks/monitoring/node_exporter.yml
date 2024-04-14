@@ -1,0 +1,37 @@
+- name: wget
+  shell: wget https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_exporter-1.5.0.linux-amd64.tar.gz
+
+- name: tar
+  shell: tar xvf node_exporter-1.5.0.linux-amd64.tar.gz node_exporter-1.5.0.linux-amd64/node_exporter
+
+- name: Copy node_exporter
+  copy:
+    src: "./node_exporter-1.5.0.linux-amd64/node_exporter"
+    dest: /usr/local/bin/
+    mode: "0755"
+    remote_src: yes
+  ignore_errors: yes
+
+- name: remove file
+  file:
+    path: ./node_exporter-1.5.0.linux-amd64.tar.gz
+    state: absent
+
+- name: remove directory
+  file:
+    path: ./node_exporter-1.5.0.linux-amd64
+    state: absent
+
+- name: Copy node_exporter.service
+  copy:
+    src: "../../files/node_exporter.service"
+    dest: /etc/systemd/system/
+    mode: "0644"
+
+- name: node_exporter is running
+  systemd:
+    name: node_exporter
+    state: started
+    daemon_reload: true
+    enabled: true
+  ignore_errors: yes

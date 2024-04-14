@@ -1,0 +1,39 @@
+- name: Install the package
+  apt:
+    name:
+      - lsb-release
+
+- name: curl
+  shell: curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+
+- name: echo
+  shell: echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+
+- name: Update
+  apt:
+    update_cache: true
+
+- name: Install the package
+  apt:
+    name:
+      - redis
+
+- name: Copy
+  copy:
+    src: ../../files/redis.conf
+    dest: /etc/redis/redis.conf
+    mode: "0644"
+    backup: true
+
+- name: redis is running
+  systemd:
+    name: redis-server
+    state: started
+    enabled: true
+  ignore_errors: yes
+
+- name: redis is restarted
+  systemd:
+    name: redis-server
+    state: restarted
+  ignore_errors: yes

@@ -1,0 +1,19 @@
+- name: Purge the package "needrestart"
+  apt:
+    name: needrestart
+    state: absent
+    purge: true
+    autoremove: yes
+
+- name: Update Upgrade
+  apt:
+    upgrade: yes
+    update_cache: true
+
+- name: set inputrc
+  lineinfile:
+    dest: /etc/inputrc
+    insertafter: EOF
+    line: "{{ item }}"
+  with_items:
+    - "set bell-style none"

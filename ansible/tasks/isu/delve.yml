@@ -1,0 +1,4 @@
+- name: setup
+  shell: sudo -u isucon bash -lc "go get github.com/go-delve/delve/cmd/dlv"
+  args:
+    chdir: "/home/isucon/private_isu/webapp/golang"

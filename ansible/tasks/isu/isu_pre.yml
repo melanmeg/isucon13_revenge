@@ -1,0 +1,20 @@
+- name: file
+  file:
+    path: "{{ home_dir }}/.ssh/"
+    state: directory
+    recurse: yes
+    owner: isucon
+    group: isucon
+
+- name: Copy
+  copy:
+    src: /home/ubuntu/.ssh/authorized_keys
+    dest: "{{ home_dir }}/.ssh/"
+    owner: isucon
+    group: isucon
+    mode: "0600"
+    remote_src: yes
+  ignore_errors: yes
+
+- name: shell
+  shell: systemctl restart sshd

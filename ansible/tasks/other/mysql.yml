@@ -1,0 +1,43 @@
+- name: Install the package
+  apt:
+    name:
+      - mysqltuner
+
+- name: Copy
+  copy:
+    src: ../../files/mysql/my.cnf
+    dest: /etc/mysql/my.cnf
+    mode: "0644"
+    backup: true
+
+- name: set
+  lineinfile:
+    dest: /lib/systemd/system/mysql.service
+    backrefs: true
+    insertafter: EOF
+    regexp: '^#?\s*LimitNOFILE='
+    line: "LimitNOFILE=65535"
+  ignore_errors: yes
+
+- name: remove file
+  file:
+    path: /var/log/mysql/mysql-slow.sql
+    state: absent
+
+- name: shell
+  shell: mysql -u root -pisucon -e "CREATE USER 'isuconp'@'%' IDENTIFIED BY 'isuconp';"
+  ignore_errors: yes
+
+- name: shell
+  shell: mysql -u root -pisucon -e "GRANT ALL PRIVILEGES ON *.* TO 'isuconp'@'%' WITH GRANT OPTION;"
+  ignore_errors: yes
+
+- name: shell
+  shell: mysql -u root -pisucon -e "flush privileges;"
+  ignore_errors: yes
+
+- name: mysql is restarted
+  systemd:
+    name: mysql
+    state: restarted
+  become: yes

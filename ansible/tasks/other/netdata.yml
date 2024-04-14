@@ -1,0 +1,26 @@
+- name: Install the package
+  apt:
+    name:
+      - netdata
+
+- name: set netdata.conf
+  lineinfile:
+    dest: /etc/netdata/netdata.conf
+    backrefs: true
+    insertafter: EOF
+    regexp: '^#?\s*bind socket to IP'
+    line: "bind socket to IP = 0.0.0.0"
+  ignore_errors: yes
+
+- name: netdata is running
+  systemd:
+    name: netdata
+    state: started
+    enabled: true
+  ignore_errors: yes
+
+- name: netdata is restarted
+  systemd:
+    name: netdata
+    state: restarted
+  ignore_errors: yes

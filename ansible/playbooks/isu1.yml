@@ -1,7 +1,7 @@
 - name: isu1
   hosts: isu1
   gather_facts: false
-  user: ubuntu
+  user: isucon
   become: true
   max_fail_percentage: 0
   vars_files:

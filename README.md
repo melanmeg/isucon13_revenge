@@ -49,8 +49,6 @@ total 28
 
 # 新しい自己署名証明書の作成
 cd /etc/nginx/tls/
-mv _.u.isucon.dev.crt _.u.isucon.dev.crt.bk
-mv _.u.isucon.dev.key _.u.isucon.dev.key.bk
 openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout _.u.isucon.local.key -out _.u.isucon.local.crt -subj "/C=US/O=Let's Encrypt/CN=*.u.isucon.local"
 systemctl restart nginx
 ```
@@ -61,7 +59,6 @@ systemctl restart nginx
 cd /etc/nginx/tls/
 
 # devドメインはHSTSが強制有効でブラウザでの動作確認が難しいためドメインを書き換える
-find ${GITDIR} -type f -exec sed -i -e "s/u\.isucon\.dev/u.isucon.local/g" {} +
 openssl req -subj '/CN=*.t.isucon.local' -nodes -newkey rsa:2048 -keyout _.u.isucon.local.key -out _.u.isucon.local.csr
 echo "subjectAltName=DNS.1:*.u.isucon.local, DNS.2:*.u.isucon.dev" > extfile.txt
 openssl x509 -in _.u.isucon.local.csr -req -signkey _.u.isucon.local.key -sha256 -days 3650 -out _.u.isucon.local.crt -extfile extfile.txt

@@ -9,23 +9,6 @@ server {
 }
 
 server {
-  listen 443 ssl default_server;
-  server_name _;
-  index index.html index.htm index.nginx-debian.html;
-  root /var/www/html;
-
-  # bot避けのためのvhostで、この証明書は有効期限がきれています
-  ssl_certificate     /etc/nginx/tls/_.t.isucon.local.crt;
-  ssl_certificate_key /etc/nginx/tls/_.t.isucon.local.key;
-  ssl_protocols TLSv1.3;
-  ssl_prefer_server_ciphers off;
-
-  location / {
-    try_files $uri $uri/ =404;
-  }
-}
-
-server {
   listen 443 ssl;
   server_name u.isucon.local;
   server_name *.u.isucon.local;

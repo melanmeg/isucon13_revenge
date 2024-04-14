@@ -4,7 +4,7 @@
 sudo mysql -u isucon -pisucon -e "DROP DATABASE IF EXISTS isupipe"
 sudo mysql -u isucon -pisucon -e "CREATE DATABASE IF NOT EXISTS isupipe"
 sudo cat ~/webapp/sql/initdb.d/10_schema.sql | sudo mysql isupipe
-~/webapp/sql/init.sh
+sudo ~/webapp/sql/init.sh
 
 # アプリケーションのビルド
 APP_NAME=isupipe

@@ -22,26 +22,32 @@
     path: "{{ home_dir }}/{{ git_repo }}"
     state: absent
 
-- name: isupipe-go is restarted
+- name: systemd
   systemd:
     name: isupipe-go
     state: restarted
-# - name: remove
-#   file:
-#     path: /var/log/nginx/access.log
-#     state: absent
 
-# - name: nginx is restarted
-#   systemd:
-#     name: nginx
-#     state: restarted
+- name: shell
+  shell: sudo -u isucon bash -lc "go build -o isupipe"
+  args:
+    chdir: "{{ home_dir }}/webapp/go/"
 
-# - name: remove
-#   file:
-#     path: /var/log/mysql/mysql-slow.sql
-#     state: absent
+- name: remove
+  file:
+    path: /var/log/nginx/access.log
+    state: absent
 
-# - name: mysql is restarted
-#   systemd:
-#     name: mysql
-#     state: restarted
+- name: nginx is restarted
+  systemd:
+    name: nginx
+    state: restarted
+
+- name: remove
+  file:
+    path: /var/log/mysql/mysql-slow.sql
+    state: absent
+
+- name: mysql is restarted
+  systemd:
+    name: mysql
+    state: restarted

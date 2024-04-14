@@ -1,0 +1,183 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "private-isu Deploy"
+Parameters:
+  KeyName:
+    Description: The EC2 Key Pair to allow SSH access to the instance
+    Type: "AWS::EC2::KeyPair::KeyName"
+
+Resources:
+  # ------------------------------------------------------------#
+  #  Network
+  # ------------------------------------------------------------#
+  # VPC Create
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      Tags:
+        - Key: Name
+          Value: isu-vpc
+
+  # InternetGateway Create
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: isu-igw
+
+  # IGW Attach
+  InternetGatewayAttachment:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+  # Subnet01 Create
+  Subnet01:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: 10.1.1.0/24
+      Tags:
+        - Key: Name
+          Value: isu-subnet-01
+
+  # RouteTable01 Create
+  RouteTable01:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: isu-route-01
+
+  # Route01 Create
+  Route01:
+    Type: "AWS::EC2::Route"
+    Properties:
+      RouteTableId: !Ref RouteTable01
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref InternetGateway
+
+  # RouteTable Associate Subnet01
+  Subnet01RouteTable01ssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref Subnet01
+      RouteTableId: !Ref RouteTable01
+
+  # ------------------------------------------------------------#
+  #  SG
+  # ------------------------------------------------------------#
+  # SG01 Create
+  SG01:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: isu-sg-01
+      GroupDescription: Allow access
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        # http
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        # https
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        # ssh
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        # dns
+        - IpProtocol: udp
+          FromPort: 53
+          ToPort: 53
+          CidrIp: 0.0.0.0/0
+        # icmp
+        - IpProtocol: icmp
+          FromPort: 8
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+
+  # ------------------------------------------------------------#
+  #  Instance
+  # ------------------------------------------------------------#
+  # ENI Create
+  ENI01:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      SourceDestCheck: "false"
+      GroupSet:
+        - !Ref SG01
+      SubnetId: !Ref Subnet01
+      PrivateIpAddress: 10.1.1.11
+      Tags:
+        - Key: Name
+          Value: isu-eni-01
+  ENI04:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      SourceDestCheck: "false"
+      GroupSet:
+        - !Ref SG01
+      SubnetId: !Ref Subnet01
+      PrivateIpAddress: 10.1.1.14
+      Tags:
+        - Key: Name
+          Value: isu-eni-bench
+
+  # EC2 Instance Create
+  # Referenced AMI: https://github.com/catatsuy/private-isu
+  # Login user is ubuntu
+  Instance01:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-041289d910c114864 # ami-0676c829e30e00846
+      KeyName: !Ref KeyName
+      InstanceType: c5.large
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref ENI01
+          DeviceIndex: "0"
+      Tags:
+        - Key: Name
+          Value: isu-instance-01
+  Instance04:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-041289d910c114864 # ami-0582a2a7fbe79a30d
+      KeyName: !Ref KeyName
+      InstanceType: c6i.xlarge
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref ENI04
+          DeviceIndex: "0"
+      Tags:
+        - Key: Name
+          Value: isu-instance-bench
+
+  # EIP Create
+  EIP01:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref Instance01
+  EIP04:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref Instance04
+
+# ------------------------------------------------------------#
+#  Outputs
+# ------------------------------------------------------------#
+Outputs:
+  # EIP
+  Instance01PublicIP:
+    Value: !GetAtt Instance01.PublicIp
+    Description: Public IP of EC2 instance
+  Instance04PublicIP:
+    Value: !GetAtt Instance04.PublicIp
+    Description: Public IP of EC2 instance

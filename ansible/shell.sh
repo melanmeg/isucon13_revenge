@@ -7,9 +7,9 @@ sudo cat ~/webapp/sql/initdb.d/10_schema.sql | sudo mysql isupipe
 sudo ~/webapp/sql/init.sh
 
 # アプリケーションのビルド
-APP_NAME=isupipe
 cd /home/isucon/webapp/go/
-go build -o ${APP_NAME}
+# go build -o isupipe
+make
 
 # ミドルウェア・Appの再起動
 sudo systemctl restart isupipe-go

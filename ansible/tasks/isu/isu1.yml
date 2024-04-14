@@ -28,7 +28,7 @@
     state: restarted
 
 - name: shell
-  shell: sudo -u isucon bash -lc "go build -o isupipe"
+  shell: sudo -u isucon bash -lc "make"
   args:
     chdir: "{{ home_dir }}/webapp/go/"
 

@@ -67,10 +67,12 @@ test001 test
 - 8 isu-bench でベンチマーク実行
 
 ```bash
-$ git clone https://github.com/isucon/isucon13.git
-$ sed -i -e '/InsecureSkipVerify/s/false/true/' ./isucon13/bench/cmd/bench/benchmarker.go ./isucon13/bench/cmd/bench/bench.go
-$ cd ./isucon13/bench
-$ make
+$ cd ~ && \
+  git clone https://github.com/megutamago/isucon13_revenge.git && \
+  mv isucon13_revenge/bench ~ && \
+  rm -rf isucon13_revenge && \
+  sed -i -e '/InsecureSkipVerify/s/false/true/' ./bench/cmd/bench/benchmarker.go ./bench/cmd/bench/bench.go
+$ cd ./bench && make
 
 $ ./bin/bench_linux_amd64 run --target https://pipe.u.isucon.local \
   --nameserver 54.248.195.183 --enable-ssl

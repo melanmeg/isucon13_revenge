@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "private-isu Deploy"
+Description: "isucon13 Deploy"
 Parameters:
   KeyName:
     Description: The EC2 Key Pair to allow SSH access to the instance
@@ -141,6 +141,11 @@ Resources:
       ImageId: ami-041289d910c114864 # ami-0676c829e30e00846
       KeyName: !Ref KeyName
       InstanceType: c5.large
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 40 # Same as the production
+            VolumeType: gp3 # Same as the production
       NetworkInterfaces:
         - NetworkInterfaceId: !Ref ENI01
           DeviceIndex: "0"
@@ -153,6 +158,11 @@ Resources:
       ImageId: ami-041289d910c114864 # ami-0582a2a7fbe79a30d
       KeyName: !Ref KeyName
       InstanceType: c6i.xlarge
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 40
+            VolumeType: gp3
       NetworkInterfaces:
         - NetworkInterfaceId: !Ref ENI04
           DeviceIndex: "0"

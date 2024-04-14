@@ -27,8 +27,8 @@
 #    chdir: "{{ home_dir }}/webapp/golang/"
 #  ignore_errors: yes
 
-- name: isu-go is restarted
+- name: isupipe-go is restarted
   systemd:
-    name: isu-go
+    name: isupipe-go
     state: restarted
   become: yes

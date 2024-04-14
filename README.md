@@ -17,6 +17,15 @@ $ cp /home/ubuntu/.ssh/authorized_keys /home/isucon/.ssh/ && \
   chown isucon:isucon /home/isucon/.ssh/authorized_keys && \
   hostnamectl set-hostname isu-1 && \
   echo "10.1.1.11 isu-1" >> /etc/hosts
+
+# ubuntuユーザーでisu-benchにログインして、以下を実行する
+$ sudo su -
+$ cp /home/ubuntu/.ssh/authorized_keys /home/isucon/.ssh/ && \
+  chown isucon:isucon /home/isucon/.ssh/authorized_keys && \
+  hostnamectl set-hostname isu-bench && \
+  echo "10.1.1.11 isu-bench" >> /etc/hosts && \
+  echo "54.248.195.183 pipe.u.isucon.local" >> /etc/hosts && \
+  echo "54.248.195.183 test001.u.isucon.local" >> /etc/hosts
 ```
 
 - 3 Github Actions で 変数とシークレットを設定して isu1 を実行
@@ -32,28 +41,12 @@ x.x.x.x test001.u.isucon.local
 
 ```bash
 $ sudo pdnsutil delete-zone u.isucon.local
+$ sudo pdnsutil delete-zone u.isucon.dev
 $ sudo rm -f /opt/aws-env-isucon-subdomain-address.sh.lock
 $ sudo reboot
 ```
 
 - 6
-
-```bash
-root@isu-1:~# ls -l /etc/nginx/tls/
-total 28
--rw-r--r-- 1 root root 5591 Nov 27 12:06 _.t.isucon.dev.crt
--rw-r--r-- 1 root root 1675 Nov 27 12:06 _.t.isucon.dev.key
--rw-r--r-- 1 root root 5256 Nov 27 12:06 _.u.isucon.dev.crt
--rw-r--r-- 1 root root 3751 Nov 27 12:06 _.u.isucon.dev.issuer.crt
--rw-r--r-- 1 root root  227 Nov 27 12:06 _.u.isucon.dev.key
-
-# 新しい自己署名証明書の作成
-cd /etc/nginx/tls/
-openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout _.u.isucon.local.key -out _.u.isucon.local.crt -subj "/C=US/O=Let's Encrypt/CN=*.u.isucon.local"
-systemctl restart nginx
-```
-
-- 7
 
 ```bash
 cd /etc/nginx/tls/
@@ -64,13 +57,21 @@ echo "subjectAltName=DNS.1:*.u.isucon.local, DNS.2:*.u.isucon.dev" > extfile.txt
 openssl x509 -in _.u.isucon.local.csr -req -signkey _.u.isucon.local.key -sha256 -days 3650 -out _.u.isucon.local.crt -extfile extfile.txt
 cp -p _.u.isucon.local.crt _.u.isucon.local.issuer.crt
 
-# 自己署名証明書を利用するため
-sed -i -e '/InsecureSkipVerify/s/false/true/' ${GITDIR}/bench/cmd/bench/benchmarker.go ${GITDIR}/bench/cmd/bench/bench.go
+systemctl restart nginx
 ```
+
+- 7 https://pipe.u.isucon.local
+
+test001 test
 
 - 8 isu-bench でベンチマーク実行
 
 ```bash
-./bench_linux_amd64 run --target https://pipe.u.isucon.dev \
-  --nameserver x.x.x.x --enable-ssl
+$ git clone https://github.com/isucon/isucon13.git
+$ sed -i -e '/InsecureSkipVerify/s/false/true/' ./isucon13/bench/cmd/bench/benchmarker.go ./isucon13/bench/cmd/bench/bench.go
+$ cd ./isucon13/bench
+$ make
+
+$ ./bin/bench_linux_amd64 run --target https://pipe.u.isucon.local \
+  --nameserver 54.248.195.183 --enable-ssl
 ```

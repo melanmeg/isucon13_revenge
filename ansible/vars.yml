@@ -5,7 +5,7 @@ var:
       # - isu/isu_add.yml
       # - isu/delve.yml
     other:
-      - common/common.yml
+      # - common/common.yml
       # - monitoring/fluent-bit.yml
       # - monitoring/node_exporter.yml
       # - other/alp.yml

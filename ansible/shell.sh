@@ -18,6 +18,7 @@ sudo systemctl restart nginx
 sudo rm -f /var/log/mysql/mysql-slow.sql
 sudo systemctl restart mysql
 
+# sudo pdnsutil delete-zone u.isucon.dev
 # sudo pdnsutil delete-zone u.isucon.local
 # sudo rm -f /opt/aws-env-isucon-subdomain-address.sh.lock
 # sudo reboot

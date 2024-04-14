@@ -49,8 +49,8 @@ func normalStatsCalcPretest(ctx context.Context, contestantLogger *zap.Logger, d
 		Tags:         []int64{},
 		Title:        coldReservation.Title,
 		Description:  coldReservation.Description,
-		PlaylistUrl:  "https://media.xiii.isucon.local/api/4/playlist.m3u8",
-		ThumbnailUrl: "https://media.xiii.isucon.local/isucon12_final.webp",
+		PlaylistUrl:  "https://media.xiii.isucon.dev/api/4/playlist.m3u8",
+		ThumbnailUrl: "https://media.xiii.isucon.dev/isucon12_final.webp",
 		StartAt:      coldReservation.StartAt,
 		EndAt:        coldReservation.EndAt,
 	})

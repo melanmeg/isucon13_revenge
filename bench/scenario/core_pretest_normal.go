@@ -119,10 +119,10 @@ func checkPretestLivestream(subject string, livestream *isupipe.Livestream, titl
 			}
 		}
 	}
-	if strings.Index(livestream.PlaylistUrl, "https://media.xiii.isucon.local") != 0 {
+	if strings.Index(livestream.PlaylistUrl, "https://media.xiii.isucon.dev") != 0 {
 		return fmt.Errorf("%s livestreamのPlaylistUrlが正しくありません (actual:%s)", subject, livestream.PlaylistUrl)
 	}
-	if strings.Index(livestream.ThumbnailUrl, "https://media.xiii.isucon.local") != 0 {
+	if strings.Index(livestream.ThumbnailUrl, "https://media.xiii.isucon.dev") != 0 {
 		return fmt.Errorf("%s livestreamのThumbnailUrlが正しくありません (actual:%s)", subject, livestream.ThumbnailUrl)
 	}
 	if livestream.StartAt != startAt.Unix() {
@@ -238,8 +238,8 @@ func NormalLivestreamPretest(ctx context.Context, contestantLogger *zap.Logger, 
 		Tags:         tags,
 		Title:        title,
 		Description:  description,
-		PlaylistUrl:  "https://media.xiii.isucon.local/api/4/playlist.m3u8",
-		ThumbnailUrl: "https://media.xiii.isucon.local/isucon12_final.webp",
+		PlaylistUrl:  "https://media.xiii.isucon.dev/api/4/playlist.m3u8",
+		ThumbnailUrl: "https://media.xiii.isucon.dev/isucon12_final.webp",
 		StartAt:      startAt.Unix(),
 		EndAt:        endAt.Unix(),
 	})
@@ -330,8 +330,8 @@ func NormalLivestreamPretest(ctx context.Context, contestantLogger *zap.Logger, 
 		Tags:         tags2nd,
 		Title:        title2nd,
 		Description:  description2nd,
-		PlaylistUrl:  "https://media.xiii.isucon.local/api/4/playlist.m3u8",
-		ThumbnailUrl: "https://media.xiii.isucon.local/isucon12_final.webp",
+		PlaylistUrl:  "https://media.xiii.isucon.dev/api/4/playlist.m3u8",
+		ThumbnailUrl: "https://media.xiii.isucon.dev/isucon12_final.webp",
 		StartAt:      startAt2nd.Unix(),
 		EndAt:        endAt2nd.Unix(),
 	})
@@ -376,8 +376,8 @@ func NormalLivestreamPretest(ctx context.Context, contestantLogger *zap.Logger, 
 				Tags:         tagsExt,
 				Title:        titleExt,
 				Description:  descriptionExt,
-				PlaylistUrl:  "https://media.xiii.isucon.local/api/4/playlist.m3u8",
-				ThumbnailUrl: "https://media.xiii.isucon.local/isucon12_final.webp",
+				PlaylistUrl:  "https://media.xiii.isucon.dev/api/4/playlist.m3u8",
+				ThumbnailUrl: "https://media.xiii.isucon.dev/isucon12_final.webp",
 				StartAt:      startAtExt.Unix(),
 				EndAt:        endAtExt.Unix(),
 			})

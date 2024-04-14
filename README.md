@@ -4,6 +4,10 @@
 
 - https://github.com/matsuu/aws-isucon/tree/main/isucon13
 
+````bash
+find ${GITDIR} -type f -exec sed -i -e "s/u\.isucon\.dev/u.isucon.local/g" {} +
+```
+
 ### Start
 
 - 1 CloudFormation で isucon13_ami_deploy_1server.yml をデプロイする
@@ -26,7 +30,7 @@ $ cp /home/ubuntu/.ssh/authorized_keys /home/isucon/.ssh/ && \
   echo "10.1.1.11 isu-bench" >> /etc/hosts && \
   echo "54.248.195.183 pipe.u.isucon.local" >> /etc/hosts && \
   echo "54.248.195.183 test001.u.isucon.local" >> /etc/hosts
-```
+````
 
 - 3 Github Actions で 変数とシークレットを設定して isu1 を実行
 

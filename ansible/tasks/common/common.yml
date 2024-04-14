@@ -1,14 +1,15 @@
+- name: Update Upgrade
+  apt:
+    upgrade: yes
+    update_cache: true
+
 - name: Purge the package "needrestart"
   apt:
     name: needrestart
     state: absent
     purge: true
     autoremove: yes
-
-- name: Update Upgrade
-  apt:
-    upgrade: yes
-    update_cache: true
+  ignore_errors: yes
 
 - name: set inputrc
   lineinfile:

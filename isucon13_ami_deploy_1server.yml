@@ -146,7 +146,7 @@ Resources:
           DeviceIndex: "0"
       Tags:
         - Key: Name
-          Value: isu-instance-01
+          Value: isu-1
   Instance04:
     Type: AWS::EC2::Instance
     Properties:
@@ -158,7 +158,7 @@ Resources:
           DeviceIndex: "0"
       Tags:
         - Key: Name
-          Value: isu-instance-bench
+          Value: isu-bench
 
   # EIP Create
   EIP01:

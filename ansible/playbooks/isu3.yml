@@ -1,0 +1,16 @@
+- name: isu3
+  hosts: isu3
+  gather_facts: false
+  user: ubuntu
+  become: true
+  max_fail_percentage: 0
+  vars_files:
+    - ../env.yml
+    - ../vars.yml
+  tasks:
+    - include_tasks: "../tasks/{{ item }}"
+      with_items: "{{ var.isu3.other }}"
+      when: var.isu3.other
+    - include_tasks: "../tasks/{{ item }}"
+      with_items: "{{ var.isu3.tasks }}"
+      when: var.isu3.tasks

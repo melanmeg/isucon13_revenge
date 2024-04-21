@@ -43,6 +43,8 @@ x.x.x.x test001.u.isucon.local
 
 - 5
 
+### ※再起動後はドメインなど反映に時間がかかりそう
+
 ```bash
 $ sudo pdnsutil delete-zone u.isucon.local
 $ sudo pdnsutil delete-zone u.isucon.dev

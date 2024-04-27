@@ -13,9 +13,3 @@ var:
       - other/nginx.yml
       - other/parameter.yml
       - other/percona.yml
-  isu2:
-    tasks:
-    other:
-  isu3:
-    tasks:
-    other:

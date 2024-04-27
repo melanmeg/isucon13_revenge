@@ -55,6 +55,12 @@ cp -p _.u.isucon.local.crt _.u.isucon.local.issuer.crt
 systemctl restart nginx
 ```
 
+- 6.x
+
+```bash
+sudo chmod 644 /etc/powerdns/pdns.conf
+```
+
 - 6
 
 ### ※再起動後はドメインなど反映に時間がかかりそう
@@ -68,12 +74,13 @@ $ reboot
 ```
 
 - 7 https://pipe.u.isucon.local
+
   - ID: test001
   - PW: test
 
-test001 test
+- 8 Github Actions で 再度 isu1 を実行
 
-- 8 isu-bench でベンチマーク実行
+- 9 isu-bench でベンチマーク実行
 
 ```bash
 $ cd ~ && \

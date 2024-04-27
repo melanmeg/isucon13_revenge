@@ -4,3 +4,9 @@ var:
       - isu/isu1.yml
     other:
       - other/nginx.yml
+  isu2:
+    tasks:
+    other:
+  isu3:
+    tasks:
+    other:

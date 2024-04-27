@@ -1,6 +1,6 @@
 - name: Copy
   copy:
-    src: "../../files/nginx/sites-enabled/isupipe.conf"
+    src: ../files/nginx/sites-enabled/isupipe.conf
     dest: /etc/nginx/sites-enabled/isupipe.conf
     mode: "0644"
     backup: true

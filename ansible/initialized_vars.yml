@@ -2,7 +2,7 @@ var:
   isu1:
     tasks:
       - isu/isu1.yml
-      # - isu/delve.yml
+      - isu/delve.yml
     other:
       - common/common.yml
       - other/alp.yml

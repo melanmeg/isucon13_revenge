@@ -1,0 +1,20 @@
+var:
+  isu1:
+    tasks:
+      - isu/isu1.yml
+      # - isu/delve.yml
+    other:
+      - common/common.yml
+      - other/alp.yml
+      - other/collect.yml
+      - other/graphviz.yml
+      - other/mysql.yml
+      - other/netdata.yml
+      - other/parameter.yml
+      - other/percona.yml
+  isu2:
+    tasks:
+    other:
+  isu3:
+    tasks:
+    other:

@@ -10,6 +10,7 @@ var:
       - other/graphviz.yml
       - other/mysql.yml
       - other/netdata.yml
+      - other/nginx.yml
       - other/parameter.yml
       - other/percona.yml
   isu2:

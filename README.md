@@ -37,8 +37,8 @@ $ cp /home/ubuntu/.ssh/authorized_keys /home/isucon/.ssh/ && \
 - 4 Windows の hosts に以下のように追加
 
 ```bash
-x.x.x.x pipe.u.isucon.local
-x.x.x.x test001.u.isucon.local
+x.x.x.x(isu1,2,3) pipe.u.isucon.local
+x.x.x.x(isu1,2,3) test001.u.isucon.local
 ```
 
 - 5
@@ -84,5 +84,5 @@ $ cd ~ && \
 $ cd ./bench && make
 
 $ ./bin/bench_linux_amd64 run --target https://pipe.u.isucon.local \
-  --nameserver 54.248.195.183 --enable-ssl
+  --nameserver x.x.x.x(isu1,2,3) --enable-ssl
 ```

@@ -32,7 +32,7 @@
   shell: cat "{{ home_dir }}/webapp/sql/initdb.d/10_schema.sql" | sudo mysql isupipe
 
 - name: shell
-  shell: "{{ home_dir }}/webapp/sql/init.sh"
+  shell: "bash {{ home_dir }}/webapp/sql/init.sh"
 
 - name: shell
   shell: sudo -u isucon bash -lc "make"

@@ -6,7 +6,7 @@ var:
     other:
       - common/common.yml
       - other/alp.yml
-      - other/collect.yml
+      # - other/collect.yml
       - other/graphviz.yml
       - other/mysql.yml
       - other/netdata.yml

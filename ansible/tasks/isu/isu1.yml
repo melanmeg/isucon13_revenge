@@ -24,15 +24,19 @@
 
 - name: shell
   shell: mysql -u isucon -pisucon -e "DROP DATABASE IF EXISTS isupipe"
+  ignore_errors: yes
 
 - name: shell
   shell: mysql -u isucon -pisucon -e "CREATE DATABASE IF NOT EXISTS isupipe"
+  ignore_errors: yes
 
 - name: shell
   shell: cat "{{ home_dir }}/webapp/sql/initdb.d/10_schema.sql" | sudo mysql isupipe
+  ignore_errors: yes
 
 - name: shell
   shell: "bash {{ home_dir }}/webapp/sql/init.sh"
+  ignore_errors: yes
 
 - name: shell
   shell: sudo -u isucon bash -lc "make"

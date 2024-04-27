@@ -8,7 +8,6 @@
     src: ../../files/mysql/my.cnf
     dest: /etc/mysql/my.cnf
     mode: "0644"
-    backup: true
 
 - name: set
   lineinfile:

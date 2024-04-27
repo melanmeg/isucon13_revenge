@@ -73,12 +73,12 @@ $ pdnsutil delete-zone u.isucon.local && \
 $ reboot
 ```
 
-- 7 https://pipe.u.isucon.local
+- 7 Github Actions で 再度 isu1 を実行
+
+- 8 https://pipe.u.isucon.local
 
   - ID: test001
   - PW: test
-
-- 8 Github Actions で 再度 isu1 を実行
 
 - 9 isu-bench でベンチマーク実行
 

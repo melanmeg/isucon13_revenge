@@ -68,6 +68,8 @@ $ reboot
 ```
 
 - 7 https://pipe.u.isucon.local
+  - ID: test001
+  - PW: test
 
 test001 test
 

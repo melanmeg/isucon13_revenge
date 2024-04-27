@@ -43,27 +43,28 @@ x.x.x.x test001.u.isucon.local
 
 - 5
 
-### ※再起動後はドメインなど反映に時間がかかりそう
-
 ```bash
-$ sudo pdnsutil delete-zone u.isucon.local
-$ sudo pdnsutil delete-zone u.isucon.dev
-$ sudo rm -f /opt/aws-env-isucon-subdomain-address.sh.lock
-$ sudo reboot
+# devドメインはHSTSが強制有効でブラウザでの動作確認が難しいためドメインを書き換える
+$ sudo su -
+$ cd /etc/nginx/tls/ && \
+openssl req -subj '/CN=*.t.isucon.local' -nodes -newkey rsa:2048 -keyout _.u.isucon.local.key -out _.u.isucon.local.csr && \
+echo "subjectAltName=DNS.1:*.u.isucon.local, DNS.2:*.u.isucon.dev" > extfile.txt && \
+openssl x509 -in _.u.isucon.local.csr -req -signkey _.u.isucon.local.key -sha256 -days 3650 -out _.u.isucon.local.crt -extfile extfile.txt && \
+cp -p _.u.isucon.local.crt _.u.isucon.local.issuer.crt
+
+systemctl restart nginx
 ```
 
 - 6
 
+### ※再起動後はドメインなど反映に時間がかかりそう
+
 ```bash
-cd /etc/nginx/tls/
-
-# devドメインはHSTSが強制有効でブラウザでの動作確認が難しいためドメインを書き換える
-openssl req -subj '/CN=*.t.isucon.local' -nodes -newkey rsa:2048 -keyout _.u.isucon.local.key -out _.u.isucon.local.csr
-echo "subjectAltName=DNS.1:*.u.isucon.local, DNS.2:*.u.isucon.dev" > extfile.txt
-openssl x509 -in _.u.isucon.local.csr -req -signkey _.u.isucon.local.key -sha256 -days 3650 -out _.u.isucon.local.crt -extfile extfile.txt
-cp -p _.u.isucon.local.crt _.u.isucon.local.issuer.crt
-
-systemctl restart nginx
+$ sudo su -
+$ pdnsutil delete-zone u.isucon.local && \
+  pdnsutil delete-zone u.isucon.dev && \
+  rm -f /opt/aws-env-isucon-subdomain-address.sh.lock
+$ reboot
 ```
 
 - 7 https://pipe.u.isucon.local

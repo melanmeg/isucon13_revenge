@@ -2,3 +2,4 @@ var:
   isu1:
     tasks:
       - isu/isu1.yml
+    other:

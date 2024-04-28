@@ -10,9 +10,9 @@ find ${GITDIR} -type f -exec sed -i -e "s/u\.isucon\.dev/u.isucon.local/g" {} +
 
 ### Start
 
-- 1 CloudFormation で isucon13_ami_deploy_1server.yml をデプロイする
+1. CloudFormation で isucon13_ami_deploy_1server.yml をデプロイする
 
-- 2
+2.
 
 ```bash
 # ubuntuユーザーでisu-1にログインして、以下を実行する
@@ -32,16 +32,16 @@ $ cp /home/ubuntu/.ssh/authorized_keys /home/isucon/.ssh/ && \
   echo "x.x.x.x(isu1,2,3) test001.u.isucon.local" >> /etc/hosts
 ```
 
-- 3 Github Actions で 変数とシークレットを設定して isu1 を実行
+3. Github Actions で 変数とシークレットを設定して initialize isu1 を実行
 
-- 4 Windows の hosts に以下のように追加
+4. Windows の hosts に以下のように追加
 
 ```bash
 x.x.x.x(isu1,2,3) pipe.u.isucon.local
 x.x.x.x(isu1,2,3) test001.u.isucon.local
 ```
 
-- 5
+5.
 
 ```bash
 # devドメインはHSTSが強制有効でブラウザでの動作確認が難しいためドメインを書き換える
@@ -55,13 +55,13 @@ cp -p _.u.isucon.local.crt _.u.isucon.local.issuer.crt
 systemctl restart nginx
 ```
 
-- 6.x
+6.
 
 ```bash
 sudo chmod 644 /etc/powerdns/pdns.conf
 ```
 
-- 6
+7.
 
 ### ※再起動後はドメインなど反映に時間がかかりそう
 
@@ -73,14 +73,14 @@ $ pdnsutil delete-zone u.isucon.local && \
 $ reboot
 ```
 
-- 7 Github Actions で 再度 isu1 を実行
+8. Github Actions で isu1 を実行
 
-- 8 https://pipe.u.isucon.local
+9. https://pipe.u.isucon.local
 
-  - ID: test001
-  - PW: test
+- ID: test001
+- PW: test
 
-- 9 isu-bench でベンチマーク実行
+10. isu-bench でベンチマーク実行
 
 ```bash
 $ cd ~ && \

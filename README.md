@@ -4,10 +4,6 @@
 
 - https://github.com/matsuu/aws-isucon/tree/main/isucon13
 
-```bash
-find ${GITDIR} -type f -exec sed -i -e "s/u\.isucon\.dev/u.isucon.local/g" {} +
-```
-
 ### Start
 
 1. CloudFormation で isucon13_ami_deploy_1server.yml をデプロイする

@@ -9,7 +9,7 @@ var:
       # - monitoring/fluent-bit.yml
       # - monitoring/node_exporter.yml
       - other/alp.yml
-      - other/collect.yml
+      # - other/collect.yml
       - other/graphviz.yml
       - other/mysql.yml
       - other/netdata.yml

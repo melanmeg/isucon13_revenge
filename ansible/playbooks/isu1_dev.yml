@@ -5,8 +5,8 @@
   become: true
   max_fail_percentage: 0
   vars_files:
-    - ../env.yml
-    - ../vars.yml
+    - ../vars/env.yml
+    - ../vars/vars_dev.yml
   tasks:
     - include_tasks: "../tasks/{{ item }}"
       with_items: "{{ var.isu1.other }}"

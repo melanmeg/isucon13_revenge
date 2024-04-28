@@ -1,0 +1,6 @@
+var:
+  isu1:
+    tasks:
+      - isu/isu1_init.yml
+    other:
+      - common/common.yml

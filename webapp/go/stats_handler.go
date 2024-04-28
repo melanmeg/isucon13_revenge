@@ -24,6 +24,15 @@ type LivestreamRankingEntry struct {
 }
 type LivestreamRanking []LivestreamRankingEntry
 
+type UsernameReactionsEntry struct {
+	Username  string `db:"username"`
+	Reactions int64  `db:"reactions"`
+}
+type UsernameTipsEntry struct {
+	Username string `db:"username"`
+	Tips     int64  `db:"tips"`
+}
+
 func (r LivestreamRanking) Len() int      { return len(r) }
 func (r LivestreamRanking) Swap(i, j int) { r[i], r[j] = r[j], r[i] }
 func (r LivestreamRanking) Less(i, j int) bool {
@@ -71,12 +80,14 @@ func getUserStatisticsHandler(c echo.Context) error {
 	// ユーザごとに、紐づく配信について、累計リアクション数、累計ライブコメント数、累計売上金額を算出
 	// また、現在の合計視聴者数もだす
 
+	// トランザクション開始
 	tx, err := dbConn.BeginTxx(ctx, nil)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to begin transaction: "+err.Error())
 	}
 	defer tx.Rollback()
 
+	// リクエストパラメータから受け取ったユーザー名のユーザーのレコードを1件取得
 	var user UserModel
 	if err := tx.GetContext(ctx, &user, "SELECT * FROM users WHERE name = ?", username); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -86,40 +97,63 @@ func getUserStatisticsHandler(c echo.Context) error {
 		}
 	}
 
-	// ランク算出
-	var users []*UserModel
-	if err := tx.SelectContext(ctx, &users, "SELECT * FROM users"); err != nil {
+	// start-region ランク算出
+
+	// start-sub-region 全ユーザーのスコア算出
+
+	username2ReactionsMap := make(map[string]int64)
+	username2TipsMap := make(map[string]int64)
+	var usernameReactions []UsernameReactionsEntry
+	query := `
+	SELECT u.name as username, COUNT(*) as reactions FROM users u
+	INNER JOIN livestreams l ON l.user_id = u.id
+	INNER JOIN reactions r ON r.livestream_id = l.id
+	GROUP BY u.name`
+	if err := tx.GetContext(ctx, &usernameReactions, query); err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to count reactions: "+err.Error())
+	}
+
+	var usernameTips []UsernameTipsEntry
+	query = `
+	SELECT u.name as username, IFNULL(SUM(l2.tip), 0) as tips FROM users u
+	INNER JOIN livestreams l ON l.user_id = u.id
+	INNER JOIN livecomments l2 ON l2.livestream_id = l.id
+	GROUP BY u.name
+	`
+	if err := tx.GetContext(ctx, &usernameTips, query); err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to count tips: "+err.Error())
+	}
+
+	// ユーザーレコード全件取得
+	var usernames []string
+	if err := tx.SelectContext(ctx, &usernames, "SELECT name FROM users"); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to get users: "+err.Error())
 	}
 
-	var ranking UserRanking
-	for _, user := range users {
-		var reactions int64
-		query := `
-		SELECT COUNT(*) FROM users u
-		INNER JOIN livestreams l ON l.user_id = u.id
-		INNER JOIN reactions r ON r.livestream_id = l.id
-		WHERE u.id = ?`
-		if err := tx.GetContext(ctx, &reactions, query, user.ID); err != nil && !errors.Is(err, sql.ErrNoRows) {
-			return echo.NewHTTPError(http.StatusInternalServerError, "failed to count reactions: "+err.Error())
-		}
+	// reactionのマップ生成
+	for _, entry := range usernameReactions {
+		username2ReactionsMap[entry.Username] = entry.Reactions
+	}
 
-		var tips int64
-		query = `
-		SELECT IFNULL(SUM(l2.tip), 0) FROM users u
-		INNER JOIN livestreams l ON l.user_id = u.id	
-		INNER JOIN livecomments l2 ON l2.livestream_id = l.id
-		WHERE u.id = ?`
-		if err := tx.GetContext(ctx, &tips, query, user.ID); err != nil && !errors.Is(err, sql.ErrNoRows) {
-			return echo.NewHTTPError(http.StatusInternalServerError, "failed to count tips: "+err.Error())
-		}
+	// tipのマップ生成
+	for _, entry := range usernameTips {
+		username2TipsMap[entry.Username] = entry.Tips
+	}
+
+	var ranking UserRanking
+	for _, username := range usernames {
+		// マップをkey=usernameで検索して、valueのreactions数とtips数を取得する
+		reactions := username2ReactionsMap[username]
+		tips := username2TipsMap[username]
 
 		score := reactions + tips
 		ranking = append(ranking, UserRankingEntry{
-			Username: user.Name,
+			Username: username,
 			Score:    score,
 		})
 	}
+	// end-sub-region 全ユーザーのスコア算出
+
 	sort.Sort(ranking)
 
 	var rank int64 = 1
@@ -130,11 +164,12 @@ func getUserStatisticsHandler(c echo.Context) error {
 		}
 		rank++
 	}
+	// end-region ランク算出
 
 	// リアクション数
 	var totalReactions int64
-	query := `SELECT COUNT(*) FROM users u 
-    INNER JOIN livestreams l ON l.user_id = u.id 
+	query = `SELECT COUNT(*) FROM users u
+    INNER JOIN livestreams l ON l.user_id = u.id
     INNER JOIN reactions r ON r.livestream_id = l.id
     WHERE u.name = ?
 	`

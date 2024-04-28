@@ -9,7 +9,10 @@
     dest: "{{ home_dir }}/{{ git_repo }}"
 
 - name: shell
-  shell: "cp -a {{ home_dir }}/{{ git_repo }}/.git {{ home_dir }} && cp -a {{ home_dir }}/{{ git_repo }}/webapp {{ home_dir }}"
+  shell: |
+    cp -a {{ home_dir }}/{{ git_repo }}/.git {{ home_dir }}
+    cp -a {{ home_dir }}/{{ git_repo }}/.gitignore {{ home_dir }}
+    cp -a {{ home_dir }}/{{ git_repo }}/webapp {{ home_dir }}
   ignore_errors: true
 
 - name: remove

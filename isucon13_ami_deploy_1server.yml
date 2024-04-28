@@ -151,7 +151,7 @@ Resources:
           DeviceIndex: "0"
       Tags:
         - Key: Name
-          Value: isu-1
+          Value: isu1
   Instance04:
     Type: AWS::EC2::Instance
     Properties:

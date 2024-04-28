@@ -1,0 +1,20 @@
+- name: copy
+  ansible.builtin.copy:
+    src: /home/ubuntu/.ssh/authorized_keys
+    dest: /home/isucon/.ssh/authorized_keys
+    owner: isucon
+    group: isucon
+    mode: "0600"
+    remote_src: true
+
+- name: hostname
+  ansible.builtin.hostname:
+    name: isu-bm
+
+- name: lineinfile
+  lineinfile:
+    dest: /etc/hosts
+    insertafter: EOF
+    line: "{{ item }}"
+  with_items:
+    - "10.1.1.11 isu-bm"

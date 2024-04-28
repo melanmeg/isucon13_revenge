@@ -9,7 +9,15 @@
 
 - name: hostname
   ansible.builtin.hostname:
-    name: isu-1
+    name: isu1
+
+- name: lineinfile
+  lineinfile:
+    dest: /etc/hosts
+    insertafter: EOF
+    line: "{{ item }}"
+  with_items:
+    - "10.1.1.11 isu-1"
 
 - name: shell
   shell: |
@@ -23,3 +31,20 @@
   ansible.builtin.service:
     name: nginx
     state: restarted
+
+- name: shell
+  shell: pdnsutil delete-zone u.isucon.local && pdnsutil delete-zone u.isucon.dev
+
+- name: file
+  file:
+    path: /opt/aws-env-isucon-subdomain-address.sh.lock
+    state: absent
+
+- name: Reboot the machine (Wait for 5 min)
+  reboot:
+    reboot_timeout: 300
+
+- name: file
+  ansible.builtin.file:
+    path: /etc/powerdns/pdns.conf
+    mode: "0644"

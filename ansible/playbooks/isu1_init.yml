@@ -14,3 +14,20 @@
     - include_tasks: "../tasks/{{ item }}"
       with_items: "{{ var.isu1.tasks }}"
       when: var.isu1.tasks
+
+- name: isu-bm
+  hosts: isu-bm
+  gather_facts: false
+  user: ubuntu
+  become: true
+  max_fail_percentage: 0
+  vars_files:
+    - ../vars/env.yml
+    - ../vars/vars_init.yml
+  tasks:
+    - include_tasks: "../tasks/{{ item }}"
+      with_items: "{{ var.isu-bm.other }}"
+      when: var.isu1.other
+    - include_tasks: "../tasks/{{ item }}"
+      with_items: "{{ var.isu-bm.tasks }}"
+      when: var.isu1.tasks

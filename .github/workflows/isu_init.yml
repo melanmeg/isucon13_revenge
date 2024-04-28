@@ -19,5 +19,7 @@ jobs:
           inventory: |
             [isu1]
             ${{ vars.HOST1 }}
+            [isu-bm]
+            ${{ vars.HOST_BM }}
           options: |
             --inventory .hosts

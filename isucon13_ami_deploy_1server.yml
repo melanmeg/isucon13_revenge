@@ -130,7 +130,7 @@ Resources:
       PrivateIpAddress: 10.1.1.14
       Tags:
         - Key: Name
-          Value: isu-eni-bench
+          Value: isu-eni-bm
 
   # EC2 Instance Create
   # Referenced AMI: https://github.com/catatsuy/private-isu
@@ -168,7 +168,7 @@ Resources:
           DeviceIndex: "0"
       Tags:
         - Key: Name
-          Value: isu-bench
+          Value: isu-bm
 
   # EIP Create
   EIP01:

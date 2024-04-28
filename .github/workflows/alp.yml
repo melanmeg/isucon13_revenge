@@ -1,4 +1,4 @@
-name: "Alp"
+name: "alp"
 on:
   workflow_dispatch:
 jobs:

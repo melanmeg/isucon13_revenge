@@ -1,4 +1,4 @@
-name: "Mysql"
+name: "mysql"
 on:
   workflow_dispatch:
 jobs:

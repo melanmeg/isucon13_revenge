@@ -1,4 +1,4 @@
-name: "Initialized isu1"
+name: "initialize isu1"
 on:
   workflow_dispatch:
 jobs:

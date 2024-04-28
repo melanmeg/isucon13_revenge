@@ -27,7 +27,7 @@ $ sudo su -
 $ cp /home/ubuntu/.ssh/authorized_keys /home/isucon/.ssh/ && \
   chown isucon:isucon /home/isucon/.ssh/authorized_keys && \
   hostnamectl set-hostname isu-bench && \
-  echo "10.1.1.11 isu-bench" >> /etc/hosts && \
+  echo "10.1.1.11 isu-bm" >> /etc/hosts && \
   echo "x.x.x.x(isu1,2,3) pipe.u.isucon.local" >> /etc/hosts && \
   echo "x.x.x.x(isu1,2,3) test001.u.isucon.local" >> /etc/hosts
 ```

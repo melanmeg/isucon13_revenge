@@ -47642,7 +47642,7 @@ function l$(e) {
   return Yn("/tags", () => Bn.get$tag(), e);
 }
 function f$(e, n) {
-  const i = `https://media.xiii.isucon.dev/api/${e}/live/`;
+  const i = `https://media.xiii.isucon.local/api/${e}/live/`;
   return Yn(i, () => fetch(i).then((t) => t.json()), n);
 }
 function d$(e) {
@@ -47653,7 +47653,7 @@ function d$(e) {
   );
 }
 function da(e, n) {
-  const i = n ? `${n}.u.isucon.dev` : "pipe.u.isucon.dev",
+  const i = n ? `${n}.u.isucon.local` : "pipe.u.isucon.local",
     t = window.location.port;
   return `https://${i}${t ? `:${t}` : ""}${e}`;
 }

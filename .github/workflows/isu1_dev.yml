@@ -1,4 +1,4 @@
-name: "isu1"
+name: "isu1 dev"
 on:
   workflow_dispatch:
 jobs:

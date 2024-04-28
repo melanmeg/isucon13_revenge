@@ -87,7 +87,8 @@ $ cd ~ && \
   git clone https://github.com/megutamago/isucon13_revenge.git && \
   mv isucon13_revenge/bench ~ && \
   rm -rf isucon13_revenge && \
-  sed -i -e '/InsecureSkipVerify/s/false/true/' ./bench/cmd/bench/benchmarker.go ./bench/cmd/bench/bench.go
+  sed -i -e '/InsecureSkipVerify/s/false/true/' ./bench/cmd/bench/benchmarker.go ./bench/cmd/bench/bench.go && \
+  find ./bench -type f -exec sed -i -e "s/u\.isucon\.dev/u.isucon.local/g" {} +
 $ cd ./bench && make
 
 $ ./bin/bench_linux_amd64 run --target https://pipe.u.isucon.local \

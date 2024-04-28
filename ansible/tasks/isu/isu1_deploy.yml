@@ -43,27 +43,27 @@
   args:
     chdir: "{{ home_dir }}/webapp/go/"
 
-- name: systemd
-  systemd:
+- name: service
+  service:
     name: isupipe-go
     state: restarted
 
-- name: remove
+- name: file
   file:
     path: /var/log/nginx/access.log
     state: absent
 
-- name: nginx is restarted
-  systemd:
+- name: service
+  service:
     name: nginx
     state: restarted
 
-- name: remove
+- name: file
   file:
     path: /var/log/mysql/mysql-slow.sql
     state: absent
 
-- name: mysql is restarted
-  systemd:
+- name: service
+  service:
     name: mysql
     state: restarted

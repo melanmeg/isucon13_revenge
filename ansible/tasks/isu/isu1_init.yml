@@ -1,0 +1,25 @@
+- name: copy
+  ansible.builtin.copy:
+    src: /home/ubuntu/.ssh/authorized_keys
+    dest: /home/isucon/.ssh/authorized_keys
+    owner: isucon
+    group: isucon
+    mode: "0600"
+    remote_src: true
+
+- name: hostname
+  ansible.builtin.hostname:
+    name: isu-1
+
+- name: shell
+  shell: |
+    cd /etc/nginx/tls/ && \
+    openssl req -subj '/CN=*.t.isucon.local' -nodes -newkey rsa:2048 -keyout _.u.isucon.local.key -out _.u.isucon.local.csr && \
+    echo "subjectAltName=DNS.1:*.u.isucon.local, DNS.2:*.u.isucon.dev" > extfile.txt && \
+    openssl x509 -in _.u.isucon.local.csr -req -signkey _.u.isucon.local.key -sha256 -days 3650 -out _.u.isucon.local.crt -extfile extfile.txt && \
+    cp -p _.u.isucon.local.crt _.u.isucon.local.issuer.crt
+
+- name: service
+  ansible.builtin.service:
+    name: nginx
+    state: restarted

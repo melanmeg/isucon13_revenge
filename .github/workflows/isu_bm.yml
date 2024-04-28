@@ -13,7 +13,7 @@ jobs:
       - name: Exe
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ vars.HOST_BENCH }}
+          host: ${{ vars.HOST_BM }}
           username: isucon
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22

@@ -44,7 +44,7 @@ type InitializeResponse struct {
 	Language string `json:"language"`
 }
 
-func connectDB(logger echo.Logger) (*sqlx.DB, error) {
+func connectDB(_ echo.Logger) (*sqlx.DB, error) {
 	const (
 		networkTypeEnvKey = "ISUCON13_MYSQL_DIALCONFIG_NET"
 		addrEnvKey        = "ISUCON13_MYSQL_DIALCONFIG_ADDRESS"

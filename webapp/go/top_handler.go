@@ -22,6 +22,13 @@ type TagsResponse struct {
 	Tags []*Tag `json:"tags"`
 }
 
+func (tm *TagModel) ToTag() Tag {
+	return Tag{
+		ID:   tm.ID,
+		Name: tm.Name,
+	}
+}
+
 func getTagHandler(c echo.Context) error {
 	ctx := c.Request().Context()
 

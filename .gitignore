@@ -1,4 +1,10 @@
-hosts
-site.yml
-isucon13.pem
-README.isucon13.md
+/*
+
+!/webapp/
+!/webapp/_org
+!/ansible/
+!/.vscode
+!/.github
+!/Commands.md
+!/isucon13_ami_deploy_1server.yml
+!/README.md

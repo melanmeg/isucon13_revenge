@@ -1,0 +1,24 @@
+- name: Copy
+  copy:
+    src: ../../files/deploy.sh
+    dest: /tmp
+    owner: isucon
+    group: isucon
+    mode: "0655"
+  ignore_errors: true
+
+- name: shell
+  become: true
+  shell: bash -lc "./tmp/setup.sh"
+  register: result
+  changed_when: false
+  ignore_errors: true
+- name: show stdout
+  debug:
+    msg: "{{ result.stdout_lines }}"
+#- name: shell
+#  shell: bash -lc "go get github.com/redis/go-redis/v8"
+#  args:
+#    chdir: "{{ home_dir }}/webapp/golang/"
+#  ignore_errors: yes
+

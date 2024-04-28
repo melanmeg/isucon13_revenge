@@ -89,7 +89,7 @@ func getUserStatisticsHandler(c echo.Context) error {
 
 	// リクエストパラメータから受け取ったユーザー名のユーザーのレコードを1件取得
 	var user UserModel
-	if err := tx.GetContext(ctx, &user, "SELECT * FROM users WHERE name = ?", username); err != nil {
+	if err := tx.SelectContext(ctx, &user, "SELECT * FROM users WHERE name = ?", username); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return echo.NewHTTPError(http.StatusBadRequest, "not found user that has the given username")
 		} else {
@@ -101,15 +101,13 @@ func getUserStatisticsHandler(c echo.Context) error {
 
 	// start-sub-region 全ユーザーのスコア算出
 
-	username2ReactionsMap := make(map[string]int64)
-	username2TipsMap := make(map[string]int64)
 	var usernameReactions []UsernameReactionsEntry
 	query := `
 	SELECT u.name as username, COUNT(*) as reactions FROM users u
 	INNER JOIN livestreams l ON l.user_id = u.id
 	INNER JOIN reactions r ON r.livestream_id = l.id
 	GROUP BY u.name`
-	if err := tx.GetContext(ctx, &usernameReactions, query); err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err := tx.SelectContext(ctx, &usernameReactions, query); err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to count reactions: "+err.Error())
 	}
 
@@ -129,6 +127,9 @@ func getUserStatisticsHandler(c echo.Context) error {
 	if err := tx.SelectContext(ctx, &usernames, "SELECT name FROM users"); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to get users: "+err.Error())
 	}
+
+	username2ReactionsMap := make(map[string]int64)
+	username2TipsMap := make(map[string]int64)
 
 	// reactionのマップ生成
 	for _, entry := range usernameReactions {

@@ -2,10 +2,10 @@ var:
   isu1:
     tasks:
       - isu/isu_init.yml
+      - isu/isu1_deploy.yml
     other:
       - common/common.yml
   isu_bm:
     tasks:
       - isu/isu_bm_init.yml
     other:
-      - common/common.yml

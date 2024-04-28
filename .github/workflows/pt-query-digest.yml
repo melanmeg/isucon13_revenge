@@ -1,4 +1,4 @@
-name: "mysql"
+name: "pt-query-digest"
 on:
   workflow_dispatch:
 jobs:
@@ -18,5 +18,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            sudo sed -i '/^INSERT INTO `posts`/d' /var/log/mysql/mysql-slow.sql
             sudo pt-query-digest /var/log/mysql/mysql-slow.sql

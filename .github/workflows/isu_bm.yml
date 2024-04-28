@@ -1,4 +1,4 @@
-name: "isu deploy"
+name: "isu bench"
 on:
   workflow_dispatch:
 jobs:
@@ -13,11 +13,12 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
-          playbook: playbooks/isu_deploy.yml
+          playbook: playbooks/isu_bm.yml
           directory: ./ansible
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |
-            [isu1]
-            ${{ vars.HOST1 }}
+            [isu-bm]
+            ${{ vars.HOST_BM }}
           options: |
-            --inventory .hosts
+            -i .hosts
+            -e "target_ip=${{ vars.HOST1 }}"

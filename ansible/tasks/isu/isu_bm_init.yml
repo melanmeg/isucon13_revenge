@@ -1,7 +1,7 @@
 - name: copy
   ansible.builtin.copy:
     src: /home/ubuntu/.ssh/authorized_keys
-    dest: /home/isucon/.ssh/authorized_keys
+    dest: "{{ home_dir }}/.ssh/authorized_keys"
     owner: isucon
     group: isucon
     mode: "0600"
@@ -18,3 +18,38 @@
     line: "{{ item }}"
   with_items:
     - "10.1.1.11 isu-bm"
+
+- name: git
+  git:
+    repo: https://github.com/isucon/isucon13.git
+    dest: "{{ home_dir }}/isucon13"
+
+- name: copy
+  ansible.builtin.copy:
+    src: "{{ home_dir }}/isucon13/bench"
+    dest: "{{ home_dir }}"
+    owner: isucon
+    group: isucon
+    remote_src: true
+  ignore_errors: true
+
+- name: file
+  file:
+    path: "{{ home_dir }}/isucon13"
+    state: absent
+
+- name: shell
+  shell: sed -i -e '/InsecureSkipVerify/s/false/true/' ./bench/cmd/bench/benchmarker.go ./bench/cmd/bench/bench.go
+  args:
+    chdir: "{{ home_dir }}"
+
+- name: shell
+  shell: find ./bench -type f -exec sed -i -e "s/isucon\.dev/isucon.local/g" {} +
+  args:
+    chdir: "{{ home_dir }}"
+
+- name: shell
+  shell: sudo -u isucon bash -lc "make"
+  args:
+    chdir: "{{ home_dir }}/bench"
+  ignore_errors: true

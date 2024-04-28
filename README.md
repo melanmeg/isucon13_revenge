@@ -8,85 +8,49 @@
 
 1. CloudFormation で isucon13_ami_deploy_1server.yml をデプロイする
 
-2.
+2. Windows の hosts にターゲットの IP を追加　（+ VSCode の ssh config に追加）
 
 ```bash
-# ubuntuユーザーでisu-1にログインして、以下を実行する
-$ sudo su -
-$ cp /home/ubuntu/.ssh/authorized_keys /home/isucon/.ssh/ && \
-  chown isucon:isucon /home/isucon/.ssh/authorized_keys && \
-  hostnamectl set-hostname isu-1 && \
-  echo "10.1.1.11 isu-1" >> /etc/hosts
-
-# ubuntuユーザーでisu-benchにログインして、以下を実行する
-$ sudo su -
-$ cp /home/ubuntu/.ssh/authorized_keys /home/isucon/.ssh/ && \
-  chown isucon:isucon /home/isucon/.ssh/authorized_keys && \
-  hostnamectl set-hostname isu-bm && \
-  echo "10.1.1.11 isu-bm" >> /etc/hosts && \
-  echo "x.x.x.x(isu1,2,3) pipe.u.isucon.local" >> /etc/hosts && \
-  echo "x.x.x.x(isu1,2,3) test001.u.isucon.local" >> /etc/hosts
+x.x.x.x pipe.u.isucon.local
+x.x.x.x test001.u.isucon.local
 ```
 
-3. Github Actions で 変数とシークレットを設定して initialize isu1 を実行
+3. 初期化
 
-4. Windows の hosts に以下のように追加
+- Github Actions
+  - 変数とシークレットを設定して isu init を実行
+- ローカルの ansible
+
+```yaml
+# ansible/hosts
+[isu1]
+x.x.x.x
+
+[isu-bm]
+y.y.y.y
+```
 
 ```bash
-x.x.x.x(isu1,2,3) pipe.u.isucon.local
-x.x.x.x(isu1,2,3) test001.u.isucon.local
+$ ansible-playbook -i hosts ansible/playbooks/isu_init.yml --private-key="./isucon13.pem"
+
+# 開発環境も構築する場合
+$ ansible-playbook -i hosts ansible/playbooks/isu_dev.yml --private-key="./isucon13.pem"
 ```
 
-5.
+4. ベンチマーク
 
 ```bash
-# devドメインはHSTSが強制有効でブラウザでの動作確認が難しいためドメインを書き換える
-$ sudo su -
-$ cd /etc/nginx/tls/ && \
-openssl req -subj '/CN=*.t.isucon.local' -nodes -newkey rsa:2048 -keyout _.u.isucon.local.key -out _.u.isucon.local.csr && \
-echo "subjectAltName=DNS.1:*.u.isucon.local, DNS.2:*.u.isucon.dev" > extfile.txt && \
-openssl x509 -in _.u.isucon.local.csr -req -signkey _.u.isucon.local.key -sha256 -days 3650 -out _.u.isucon.local.crt -extfile extfile.txt && \
-cp -p _.u.isucon.local.crt _.u.isucon.local.issuer.crt
-
-systemctl restart nginx
+$ ansible-playbook -i hosts ansible/playbooks/isu_bm.yml --private-key="./isucon13.pem" -e "target_ip=x.x.x.x"
 ```
 
-6.
+### ログイン
 
-### ※再起動後はドメインなど反映に時間がかかりそう
-
-```bash
-$ sudo su -
-$ pdnsutil delete-zone u.isucon.local && \
-  pdnsutil delete-zone u.isucon.dev && \
-  rm -f /opt/aws-env-isucon-subdomain-address.sh.lock
-$ reboot
-```
-
-7.
-
-```bash
-sudo chmod 644 /etc/powerdns/pdns.conf
-```
-
-8. Github Actions で isu1 を実行
-
-9. https://pipe.u.isucon.local
-
+- URL: https://pipe.u.isucon.local
 - ID: test001
 - PW: test
 
-10. isu-bench でベンチマーク実行
+### deploy
 
 ```bash
-$ cd ~ && \
-  git clone https://github.com/megutamago/isucon13_revenge.git && \
-  mv isucon13_revenge/bench ~ && \
-  rm -rf isucon13_revenge && \
-  sed -i -e '/InsecureSkipVerify/s/false/true/' ./bench/cmd/bench/benchmarker.go ./bench/cmd/bench/bench.go && \
-  find ./bench -type f -exec sed -i -e "s/u\.isucon\.dev/u.isucon.local/g" {} +
-$ cd ./bench && make
-
-$ ./bin/bench_linux_amd64 run --target https://pipe.u.isucon.local \
-  --nameserver x.x.x.x(isu1,2,3) --enable-ssl
+$ ansible-playbook -i hosts ansible/playbooks/isu_deploy.yml --private-key="./isucon13.pem"
 ```

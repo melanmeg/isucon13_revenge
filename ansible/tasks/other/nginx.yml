@@ -1,11 +1,5 @@
 - name: Copy
   copy:
-    src: ../../files/nginx/sites-enabled/isupipe.conf
-    dest: /etc/nginx/sites-enabled/isupipe.conf
-    mode: "0644"
-
-- name: Copy
-  copy:
     src: ../../files/nginx/nginx.conf
     dest: /etc/nginx/nginx.conf
     mode: "0644"

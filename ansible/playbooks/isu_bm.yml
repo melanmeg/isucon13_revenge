@@ -1,0 +1,23 @@
+- name: isu-bm
+  hosts: isu-bm
+  gather_facts: false
+  user: isucon
+  become: false
+  max_fail_percentage: 0
+  vars_files:
+    - ../vars/env.yml
+  tasks:
+    - name: shell
+      shell: "./bin/bench_linux_amd64 run --target https://pipe.u.isucon.local --nameserver {{ target_ip }} --enable-ssl"
+      args:
+        chdir: "{{ home_dir }}/bench"
+      register: result
+      changed_when: false
+      ignore_errors: true
+    - name: show stdout
+      debug:
+        msg:
+          - "STDOUT"
+          - "{{ result.stdout_lines }}"
+          - "STDERR"
+          - "{{ result.stderr_lines }}"

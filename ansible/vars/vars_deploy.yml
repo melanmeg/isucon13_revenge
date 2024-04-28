@@ -1,5 +1,5 @@
 var:
   isu1:
     tasks:
-      - isu/isu1_deploy.yml
+      - isu/isu_deploy.yml
     other:

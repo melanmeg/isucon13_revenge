@@ -39,6 +39,12 @@
 
 - name: shell
   shell: pdnsutil delete-zone u.isucon.local && pdnsutil delete-zone u.isucon.dev
+  register: result
+  changed_when: false
+  ignore_errors: true
+- name: show stdout
+  debug:
+    msg: "{{ result.stdout_lines }}"
 
 - name: file
   file:
@@ -53,3 +59,14 @@
   ansible.builtin.file:
     path: /etc/powerdns/pdns.conf
     mode: "0644"
+
+- name: Copy
+  copy:
+    src: ../../files/nginx/sites-enabled/init-isupipe.conf
+    dest: /etc/nginx/sites-enabled/isupipe.conf
+    mode: "0644"
+
+- name: reloaded
+  systemd:
+    name: nginx
+    state: reloaded

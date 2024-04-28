@@ -3,7 +3,7 @@
     path: "{{ home_dir }}/webapp"
     state: absent
 
-- name: Git checkout
+- name: git
   git:
     repo: "https://github.com/{{ git_user }}/{{ git_repo }}.git"
     dest: "{{ home_dir }}/{{ git_repo }}"
@@ -14,8 +14,8 @@
     dest: "{{ home_dir }}/"
     owner: isucon
     group: isucon
-    remote_src: yes
-  ignore_errors: yes
+    remote_src: true
+  ignore_errors: true
 
 - name: remove
   file:
@@ -24,24 +24,24 @@
 
 - name: shell
   shell: mysql -u isucon -pisucon -e "DROP DATABASE IF EXISTS isupipe"
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: shell
   shell: mysql -u isucon -pisucon -e "CREATE DATABASE IF NOT EXISTS isupipe"
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: shell
   shell: cat "{{ home_dir }}/webapp/sql/initdb.d/10_schema.sql" | sudo mysql isupipe
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: shell
   shell: "bash {{ home_dir }}/webapp/sql/init.sh"
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: shell
   shell: sudo -u isucon bash -lc "make"
   args:
-    chdir: "{{ home_dir }}/webapp/go/"
+    chdir: "{{ home_dir }}/webapp/go"
 
 - name: service
   service:
@@ -67,3 +67,8 @@
   service:
     name: mysql
     state: restarted
+
+- name: file
+  ansible.builtin.file:
+    path: /etc/powerdns/pdns.conf
+    mode: "0644"

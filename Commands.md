@@ -17,6 +17,9 @@ scp isu1:/etc/nginx/nginx.conf ./
 # remove
 rm -f /tmp/webapp.tar.gz
 rm -f /tmp/isuconp.dump.sql.gz
+
+# mysql
+mysql -u isucon -pisucon
 ```
 
 ---

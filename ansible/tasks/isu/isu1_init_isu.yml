@@ -26,6 +26,11 @@
     echo "subjectAltName=DNS.1:*.u.isucon.local, DNS.2:*.u.isucon.dev" > extfile.txt && \
     openssl x509 -in _.u.isucon.local.csr -req -signkey _.u.isucon.local.key -sha256 -days 3650 -out _.u.isucon.local.crt -extfile extfile.txt && \
     cp -p _.u.isucon.local.crt _.u.isucon.local.issuer.crt
+  register: result
+  changed_when: false
+- name: show stdout
+  debug:
+    msg: "{{ result.stdout_lines }}"
 
 - name: service
   ansible.builtin.service:

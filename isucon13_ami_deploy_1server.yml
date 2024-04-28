@@ -138,7 +138,7 @@ Resources:
   Instance01:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-041289d910c114864 # ami-0676c829e30e00846
+      ImageId: ami-041289d910c114864
       KeyName: !Ref KeyName
       InstanceType: c5.large
       BlockDeviceMappings:
@@ -155,7 +155,7 @@ Resources:
   Instance04:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-041289d910c114864 # ami-0582a2a7fbe79a30d
+      ImageId: ami-041289d910c114864
       KeyName: !Ref KeyName
       InstanceType: c6i.xlarge
       BlockDeviceMappings:

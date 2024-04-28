@@ -4,17 +4,17 @@
     dest: /etc/nginx/sites-enabled/isupipe.conf
     mode: "0644"
 
-# - name: Copy
-#   copy:
-#     src: ../../files/nginx/nginx.conf
-#     dest: /etc/nginx/nginx.conf
-#     mode: "0644"
-#     backup: true
+- name: Copy
+  copy:
+    src: ../../files/nginx/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    mode: "0644"
+    backup: true
 
-# - name: remove file
-#   file:
-#     path: /var/log/nginx/access.log
-#     state: absent
+- name: remove file
+  file:
+    path: /var/log/nginx/access.log
+    state: absent
 
 - name: reloaded
   systemd:

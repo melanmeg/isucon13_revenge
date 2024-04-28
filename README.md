@@ -57,12 +57,6 @@ systemctl restart nginx
 
 6.
 
-```bash
-sudo chmod 644 /etc/powerdns/pdns.conf
-```
-
-7.
-
 ### ※再起動後はドメインなど反映に時間がかかりそう
 
 ```bash
@@ -71,6 +65,12 @@ $ pdnsutil delete-zone u.isucon.local && \
   pdnsutil delete-zone u.isucon.dev && \
   rm -f /opt/aws-env-isucon-subdomain-address.sh.lock
 $ reboot
+```
+
+7.
+
+```bash
+sudo chmod 644 /etc/powerdns/pdns.conf
 ```
 
 8. Github Actions で isu1 を実行

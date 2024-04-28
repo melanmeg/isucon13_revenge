@@ -10,15 +10,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Run playbook
-        uses: dawidd6/action-ansible-playbook@v2
+      - name: Exe
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          playbook: playbooks/isu_bm.yml
-          directory: ./ansible
+          host: ${{ vars.HOST_BENCH }}
+          username: isucon
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          inventory: |
-            [isu-bm]
-            ${{ vars.HOST_BM }}
-          options: |
-            -i .hosts
-            -e "target_ip=${{ vars.HOST1 }}"
+          port: 22
+          script: |
+            sudo -u isucon ./bench/bin/bench_linux_amd64 run --target https://pipe.u.isucon.local --nameserver ${{ vars.HOST1 }} --enable-ssl

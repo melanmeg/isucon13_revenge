@@ -1,4 +1,4 @@
-name: "isu1 deploy"
+name: "isu dev"
 on:
   workflow_dispatch:
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
-          playbook: playbooks/isu1_deploy.yml
+          playbook: playbooks/isu1_dev.yml
           directory: ./ansible
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |

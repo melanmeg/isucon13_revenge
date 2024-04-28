@@ -1,4 +1,4 @@
-name: "isu1 dev"
+name: "isu initialize"
 on:
   workflow_dispatch:
 jobs:
@@ -13,7 +13,7 @@ jobs:
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
-          playbook: playbooks/isu1_dev.yml
+          playbook: playbooks/isu1_init.yml
           directory: ./ansible
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           inventory: |

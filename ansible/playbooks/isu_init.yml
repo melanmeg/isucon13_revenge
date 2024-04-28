@@ -26,8 +26,8 @@
     - ../vars/vars_init.yml
   tasks:
     - include_tasks: "../tasks/{{ item }}"
-      with_items: "{{ var.isu-bm.other }}"
-      when: var.isu1.other
+      with_items: "{{ var.isu_bm.other }}"
+      when: var.isu_bm.other
     - include_tasks: "../tasks/{{ item }}"
-      with_items: "{{ var.isu-bm.tasks }}"
-      when: var.isu1.tasks
+      with_items: "{{ var.isu_bm.tasks }}"
+      when: var.isu_bm.tasks

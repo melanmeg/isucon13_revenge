@@ -8,13 +8,8 @@
     repo: "https://github.com/{{ git_user }}/{{ git_repo }}.git"
     dest: "{{ home_dir }}/{{ git_repo }}"
 
-- name: Copy
-  copy:
-    src: "{{ home_dir }}/{{ git_repo }}/webapp"
-    dest: "{{ home_dir }}/"
-    owner: isucon
-    group: isucon
-    remote_src: true
+- name: shell
+  shell: "cp -a {{ home_dir }}/{{ git_repo }}/.git {{ home_dir }} && cp -a {{ home_dir }}/{{ git_repo }}/webapp {{ home_dir }}"
   ignore_errors: true
 
 - name: remove

@@ -54,3 +54,10 @@ $ ansible-playbook -i hosts ansible/playbooks/isu_bm.yml --private-key="./isucon
 ```bash
 $ ansible-playbook -i hosts ansible/playbooks/isu_deploy.yml --private-key="./isucon13.pem"
 ```
+
+### Git Memo
+
+```bash
+cp -a isucon13_revenge/* ./
+cp -a isucon13_revenge/. ./
+```

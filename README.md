@@ -63,7 +63,7 @@ $ ansible-playbook -i hosts ansible/playbooks/isu_deploy.yml --private-key="./is
 - ローカルデプロイ
 
 ```bash
-$ bash -x deploy.sh
+$ ./deploy.sh
 ```
 
 ### デバッグ環境構築

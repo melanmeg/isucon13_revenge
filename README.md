@@ -3,6 +3,8 @@
 ### ref
 
 - https://github.com/matsuu/aws-isucon/tree/main/isucon13
+- N+1: https://github.com/narusejun/isucon13-final/commit/158c68d92fa7654975815754b6118dec1b8f4bc6
+- profile: https://shiba6v.hatenablog.com/entry/2023/11/25/200313
 
 ### Start
 
@@ -51,8 +53,17 @@ $ ansible-playbook -i hosts ansible/playbooks/isu_bm.yml --private-key="./isucon
 
 ### deploy
 
+- Github Actions > isu deploy
+- Ansible
+
 ```bash
 $ ansible-playbook -i hosts ansible/playbooks/isu_deploy.yml --private-key="./isucon13.pem"
+```
+
+- ローカルデプロイ
+
+```bash
+$ bash -x deploy.sh
 ```
 
 ### デバッグ環境構築

@@ -55,9 +55,12 @@ $ ansible-playbook -i hosts ansible/playbooks/isu_bm.yml --private-key="./isucon
 $ ansible-playbook -i hosts ansible/playbooks/isu_deploy.yml --private-key="./isucon13.pem"
 ```
 
-### Git Memo
+### デバッグ環境構築
 
 ```bash
-cp -a isucon13_revenge/* ./
-cp -a isucon13_revenge/. ./
+# 開発環境構築用playbook実行。
+# 推奨の拡張機能をインストールする。
+# Ctrl + P で Go Installを選択。
+# delveを含むすべてのパッケージをインストールする。
+# サービスを止めてデバッグ実行する。
 ```

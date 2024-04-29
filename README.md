@@ -75,3 +75,11 @@ $ bash -x deploy.sh
 # delveを含むすべてのパッケージをインストールする。
 # サービスを止めてデバッグ実行する。
 ```
+
+- pprof
+
+```bash
+cd ~
+sudo curl -o cpu.pprof http://localhost:6060/debug/pprof/profile?seconds=60
+go tool pprof -http localhost:1080 cpu.pprof
+```

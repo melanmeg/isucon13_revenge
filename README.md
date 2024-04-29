@@ -83,3 +83,14 @@ cd ~
 sudo curl -o cpu.pprof http://localhost:6060/debug/pprof/profile?seconds=60
 go tool pprof -http localhost:1080 cpu.pprof
 ```
+
+- git
+
+```bash
+$ vim ~/.gitconfig
+[user]
+        name = megutamago
+        email = xxxx@gmail.com
+[credential]
+        helper = store
+```

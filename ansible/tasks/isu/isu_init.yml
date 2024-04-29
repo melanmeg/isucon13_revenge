@@ -17,7 +17,7 @@
     insertafter: EOF
     line: "{{ item }}"
   with_items:
-    - "10.1.1.11 isu-1"
+    - "127.0.0.1 isu1"
 
 - name: shell
   shell: |

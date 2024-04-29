@@ -17,7 +17,7 @@
     insertafter: EOF
     line: "{{ item }}"
   with_items:
-    - "10.1.1.11 isu-bm"
+    - "127.0.0.1 isu-bm"
 
 - name: git
   git:

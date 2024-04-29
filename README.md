@@ -76,12 +76,11 @@ $ ./deploy.sh
 # サービスを止めてデバッグ実行する。
 ```
 
-- pprof
+- fgprof
 
 ```bash
 cd ~
-sudo curl -o cpu.pprof http://localhost:6060/debug/pprof/profile?seconds=60
-go tool pprof -http localhost:1080 cpu.pprof
+go tool pprof --http=:6061 http://localhost:6060/debug/fgprof?seconds=60
 ```
 
 - git

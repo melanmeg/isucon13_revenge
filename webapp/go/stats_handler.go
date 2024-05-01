@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strconv"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 )
 
@@ -163,13 +164,36 @@ func getUserStatisticsHandler(c echo.Context) error {
 	}
 
 	// 合計視聴者数
+	livestreamIDs := make([]int64, len(livestreams))
+	for i, livestream := range livestreams {
+			livestreamIDs[i] = livestream.ID
+	}
+
+	query1 := "SELECT livestream_id, COUNT(*) AS cnt FROM livestream_viewers_history WHERE livestream_id IN (?) GROUP BY livestream_id"
+	query1, args, err := sqlx.In(query1, livestreamIDs)
+	if err != nil {
+	    return echo.NewHTTPError(http.StatusInternalServerError, "failed to prepare query: "+err.Error())
+	}
+
+	rows, err := tx.QueryxContext(ctx, tx.Rebind(query1), args...)
+	if err != nil {
+	    return echo.NewHTTPError(http.StatusInternalServerError, "failed to execute query: "+err.Error())
+	}
+	defer rows.Close()
+
+	viewersCountMap := make(map[int64]int64)
+	for rows.Next() {
+	    var livestreamID int64
+	    var cnt int64
+	    if err := rows.Scan(&livestreamID, &cnt); err != nil {
+	        return echo.NewHTTPError(http.StatusInternalServerError, "failed to scan row: "+err.Error())
+	    }
+	    viewersCountMap[livestreamID] = cnt
+	}
+
 	var viewersCount int64
 	for _, livestream := range livestreams {
-		var cnt int64
-		if err := tx.GetContext(ctx, &cnt, "SELECT COUNT(*) FROM livestream_viewers_history WHERE livestream_id = ?", livestream.ID); err != nil && !errors.Is(err, sql.ErrNoRows) {
-			return echo.NewHTTPError(http.StatusInternalServerError, "failed to get livestream_view_history: "+err.Error())
-		}
-		viewersCount += cnt
+	    viewersCount += viewersCountMap[livestream.ID]
 	}
 
 	// お気に入り絵文字

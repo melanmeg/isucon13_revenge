@@ -1,7 +1,8 @@
-- name: set limits.conf
+- name: set 99-nofile.conf
   lineinfile:
-    dest: /etc/security/limits.conf
+    dest: /etc/security/limits.d/99-nofile.conf
     insertafter: EOF
+    create: true
     line: "{{ item }}"
   with_items:
     - "root soft nofile 65536"
@@ -9,10 +10,11 @@
     - "* soft nofile 65536"
     - "* hard nofile 65536"
 
-- name: set sysctl.conf
+- name: set 99-network.conf
   lineinfile:
-    dest: /etc/sysctl.conf
+    dest: /etc/sysctl.d/99-network.conf
     insertafter: EOF
+    create: true
     line: "{{ item }}"
   with_items:
     - "net.core.somaxconn = 10000"
@@ -29,20 +31,19 @@
     - "net.ipv4.tcp_fin_timeout = 10"
     - "net.ipv4.tcp_max_tw_buckets = 2000000"
 
-- name: create file
-  file:
-    path: /etc/sysctl.d/10-link-restrictions.conf
-    state: touch
-
-- name: set 10-link-restrictions.conf
+- name: set 99-link-restrictions.conf
   lineinfile:
-    dest: /etc/sysctl.d/10-link-restrictions.conf
+    dest: /etc/sysctl.d/99-link-restrictions.conf
+    create: true
     insertafter: EOF
     line: "{{ item }}"
   with_items:
     - "fs.protected_hardlinks = 1"
     - "fs.protected_symlinks = 1"
-  ignore_errors: yes
+  ignore_errors: true
+
+- name: shell
+  ansible.builtin.shell: sysctl -p && ulimit -n
 
 - name: Reboot the machine (Wait for 5 min)
   reboot:

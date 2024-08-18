@@ -43,7 +43,7 @@
   ignore_errors: true
 
 - name: shell
-  ansible.builtin.shell: sysctl -p && ulimit -n
+  ansible.builtin.shell: sysctl --system && ulimit -n
 
 - name: Reboot the machine (Wait for 5 min)
   reboot:
